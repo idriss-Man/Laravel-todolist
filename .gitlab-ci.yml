@@ -1,0 +1,28 @@
+image: php:8.3
+
+stages:
+  - test
+
+variables:
+  APP_ENV: testing
+
+before_script:
+  # Install system deps
+  - apt-get update && apt-get install -y unzip git curl libzip-dev
+  - docker-php-ext-install zip
+
+  # Install Composer
+  - curl -sS https://getcomposer.org/installer | php
+
+  # Install PHP dependencies
+  - php composer.phar install --prefer-dist --no-progress --no-interaction
+
+test:
+  stage: test
+  script:
+    # Laravel setup
+    - cp .env.testing .env
+    - php artisan key:generate
+
+    # Run tests
+    - php composer.phar test
