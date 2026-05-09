@@ -9,7 +9,9 @@ class Item extends Model
 {
     /** @use HasFactory<\Database\Factories\ItemFactory> */
     use HasFactory;
-    protected $fillable = ['text','done','user_id'];
+    protected $fillable = ['text','done','user_id','deadline'];
+
+
 
     protected function casts(): array
     {

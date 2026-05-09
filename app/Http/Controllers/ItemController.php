@@ -37,10 +37,11 @@ class ItemController extends Controller
                 'text'=> $request->validated()['text'],
                 'done'=> False,
                 'user_id'=>auth()->id(),
+                'deadline'=> $request->validated()['deadline'],
             ]
         );
 
-        return redirect()->route('item.index');
+        return redirect()->route('dashboard.index');
     }
 
     /**
@@ -73,14 +74,16 @@ class ItemController extends Controller
     public function destroy(Item $item)
     {
         $item->delete();
-        return redirect()->route('item.index');
+        return redirect()->route('dashboard.index');
     }
     public function check(Item $item)
     {
 
         $item->done=true;
         $item->save();
-        return redirect()->route('item.index');
+        return redirect()->route('dashboard.index');
     }
+
+
 
 }

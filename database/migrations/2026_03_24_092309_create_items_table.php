@@ -17,6 +17,7 @@ return new class extends Migration
             $table->timestamps();
             $table->text('text');
             $table->boolean('done')->default(false);
+            $table->date('deadline');
         });
     }
 

@@ -22,6 +22,7 @@ class ItemFactory extends Factory
             'text' => fake()->text(),
             'done' => fake()->boolean(),
             'user_id' => User::inRandomOrder()->first()->id,
+            'deadline' => fake()->date(),
         ];
     }
 }
