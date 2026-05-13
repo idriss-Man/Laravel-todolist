@@ -31,17 +31,21 @@ class ItemController extends Controller
      */
     public function store(StoreItemRequest $request)
     {
-
+        $item = $request->validated();
+        if(empty($item['user_id'])){
+            $item['user_id'] = Auth::id();
+        }
         Item::create(
             [
-                'text'=> $request->validated()['text'],
+                'text'=> $item['text'],
                 'done'=> False,
-                'user_id'=>auth()->id(),
-                'deadline'=> $request->validated()['deadline'],
+                'user_id'=>$item['user_id'],
+                'deadline'=> $item['deadline'],
+
             ]
         );
 
-        return redirect()->route('dashboard.index');
+        return redirect()->back();
     }
 
     /**

@@ -24,6 +24,7 @@ class StoreItemRequest extends FormRequest
     {
         return [
             'text' => 'required|string',
+            'user_id' => 'integer',
             'deadline' => 'required|date',
         ];
     }

@@ -1,12 +1,16 @@
 <?php
 use App\Models\User;
 use App\Models\Item;
+use Spatie\Permission\Models\Role;
 
 describe('F2 - Items', function () {
     beforeEach(function () {
-        $this->user = User::factory()->create();
+        $this->role1= Role::create(['name' => 'todolist_manager']);
+        $this->role2= Role::create(['name' => 'todolist_user']);
+        $this->user1 = User::factory()->create()->assignRole('todolist_manager');
+        $this->user2 = User::factory()->create()->assignRole('todolist_user');
         $this->item1 = Item::factory()->create([
-            'user_id'=> $this->user->id,
+            'user_id'=> $this->user1->id,
             'text'=>"My item",
             'done'=>false,
             'deadline'=>06/02/2030,
@@ -17,13 +21,13 @@ describe('F2 - Items', function () {
     });
 
     it('user can view items - B of BREAD', function () {
-        $this->actingAs($this->user);
+        $this->actingAs($this->user1);
         $this->get(route('dashboard.index'));
-        expect(Item::where('user_id', $this->user->id)->get()[0]->text)->toBeString('My item');
+        expect(Item::where('user_id', $this->user1->id)->get()[0]->text)->toBeString('My item');
     });
 
     it('user can add an item - A of BREAD', function () {
-        $this->actingAs($this->user);
+        $this->actingAs($this->user1);
         $this->post(route('items.store'),[
             'text'=>"My new item",
             'deadline'=> date("12/04/2030"),
@@ -31,13 +35,31 @@ describe('F2 - Items', function () {
 
         $this->assertDatabaseHas('items', [
             'text'=>"My new item",
-            'user_id'=>$this->user->id,
+            'user_id'=>$this->user1->id,
             'deadline'=>date("12/04/2030"),
         ]);
+
     });
 
+    it('user can add an item to an other- A of BREAD', function () {
+        $this->actingAs($this->user1);
+        $this->post(route('items.store'),[
+            'text'=>"His new item",
+            'deadline'=> date("12/04/2030"),
+            'user_id'=>$this->user2->id,
+        ]);
+
+        $this->assertDatabaseHas('items', [
+            'text'=>"His new item",
+            'user_id'=>$this->user2->id,
+            'deadline'=>date("12/04/2030"),
+        ]);
+
+    });
+
+
     it('user can set to done an item - E of BREAD', function () {
-        $this->actingAs($this->user);
+        $this->actingAs($this->user1);
         $this->get(route('items.check',$this->item1->id));
 
         $this->assertDatabaseHas('items', [
@@ -48,10 +70,10 @@ describe('F2 - Items', function () {
 
     });
     it('user can delete a done item - D of BREAD', function () {
-        $this->actingAs($this->user);
+        $this->actingAs($this->user1);
 
         $this->item2 = Item::factory()->create([
-            'user_id'=> $this->user->id,
+            'user_id'=> $this->user1->id,
             'text'=>"My second item",
             'done'=>true,
             'deadline'=>date("06/05/2030"),
@@ -63,7 +85,7 @@ describe('F2 - Items', function () {
         $this->assertDatabaseMissing('items', [
             'text'=>"My second item",
             'deadline'=> date("12/05/2030"),
-            'user_id'=>$this->user->id,
+            'user_id'=>$this->user1->id,
         ]);
     });
 

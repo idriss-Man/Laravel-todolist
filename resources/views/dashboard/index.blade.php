@@ -23,7 +23,7 @@
 
                             <h3>Bienvenue sur {{$title}} !</h3>
 
-                            <form action="{{ route('items.store') }}" method="POST" class="row g-2">
+                            <form action="{{ route('items.store',auth()->id()) }}" method="POST" class="row g-2">
                             @csrf
                             <div class="col-auto">
                                 <input type="text" class="form-control" id="text" name="text" placeholder="Nouvel élément">
@@ -55,7 +55,7 @@
                                                 <div class="d-grip gap-2 d-md-flex justify-content-md-end">
                                                     <form action="{{ route('items.destroy',$item->id) }}" method="POST" class="row g-2">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-outline-danger btn-block">Supprimer</button>
+                                                        <button type="submit" class="btn btn-outline-danger btn-block" >Supprimer</button>
                                                         @method('DELETE')
                                                     </form>
                                                 </div>

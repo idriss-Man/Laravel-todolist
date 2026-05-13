@@ -18,7 +18,7 @@
                     </div>
                     <div class="card-body">
 
-                        <h2> Bienvenue sur votre tableau de bord manager</h2>
+                        <h2> Bienvenue sur votre tableau de bord manager!</h2>
 
                         <h3>Liste des utilisateurs avec leurs items</h3>
 
@@ -34,8 +34,9 @@
                                             {{$user->name}}
                                         </button>
                                     </h2>
-                                    <form action="{{ route('items.store',$user->id) }}" method="POST" class="row g-2" style="margin-top: 5px">
+                                    <form action="{{ route('items.store') }}" method="POST" class="row g-2" style="margin-top: 5px">
                                         @csrf
+                                        <input type="hidden" id="user_id" name="user_id" value="{{$user->id}}" >
                                         <div class="col-auto">
                                             <input type="text" class="form-control" id="text" name="text" placeholder="Nouvel élément">
                                         </div>
@@ -55,12 +56,39 @@
                                     <ul class="list-group">
                                     @foreach($user->items as $item)
 
+                                            @if ($item->done)
+                                                <div>
+                                                    <li class="list-group-item  justify-content-between align-items-center">
+                                                @if(\Carbon\Carbon::parse($item->deadline)->isPast())
+                                                    <span class="badge" style="background-color: darkred">{{\Carbon\Carbon::parse($item->deadline)->format('d/m/Y')}}</span>
+                                                @else
+                                                    <span class="badge" style="background-color: dimgrey">{{\Carbon\Carbon::parse($item->deadline)->format('d/m/Y')}}</span>
+                                                @endif
 
-                                            <div>
-                                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                {{ $item->text }}
-                                            </li>
-                                            </div>
+
+                                                           <s> {{ $item->text }}</s>
+                                                        </li>
+                                                    </div>
+
+                                            @else
+                                                <div>
+                                                    <li class="list-group-item  justify-content-between align-items-center">
+                                                        @if(\Carbon\Carbon::parse($item->deadline)->isPast())
+                                                            <span class="badge" style="background-color: darkred">{{\Carbon\Carbon::parse($item->deadline)->format('d/m/Y')}}</span>
+                                                            <strong>{{ $item->text }}</strong>
+                                                        @else
+                                                            <span class="badge" style="background-color: dimgrey">{{\Carbon\Carbon::parse($item->deadline)->format('d/m/Y')}}</span>
+                                                            {{ $item->text }}
+                                                        @endif
+
+                                                </li>
+                                                </div>
+
+                                            @endif
+
+
+
+
 
 
                                     @endforeach
