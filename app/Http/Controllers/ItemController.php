@@ -31,16 +31,21 @@ class ItemController extends Controller
      */
     public function store(StoreItemRequest $request)
     {
-
+        $item = $request->validated();
+        if(empty($item['user_id'])){
+            $item['user_id'] = Auth::id();
+        }
         Item::create(
             [
-                'text'=> $request->validated()['text'],
+                'text'=> $item['text'],
                 'done'=> False,
-                'user_id'=>auth()->id(),
+                'user_id'=>$item['user_id'],
+                'deadline'=> $item['deadline'],
+
             ]
         );
 
-        return redirect()->route('item.index');
+        return redirect()->back();
     }
 
     /**
@@ -73,14 +78,16 @@ class ItemController extends Controller
     public function destroy(Item $item)
     {
         $item->delete();
-        return redirect()->route('item.index');
+        return redirect()->route('dashboard.index');
     }
     public function check(Item $item)
     {
 
         $item->done=true;
         $item->save();
-        return redirect()->route('item.index');
+        return redirect()->route('dashboard.index');
     }
+
+
 
 }
