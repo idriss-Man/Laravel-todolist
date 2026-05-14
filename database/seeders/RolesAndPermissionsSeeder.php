@@ -25,14 +25,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $permission6 = Permission::create(['name' => 'update items']);
         $permission7 = Permission::create(['name' => 'delete items']);
 
-        $role1->givePermissionTo($permission1);
-        $role1->givePermissionTo($permission2);
-
-        $role2->givePermissionTo($permission3);
-        $role2->givePermissionTo($permission4);
-        $role2->givePermissionTo($permission5);
-        $role2->givePermissionTo($permission6);
-        $role2->givePermissionTo($permission7);
-
+        $role1->givePermissionTo($permission1,$permission2);
+        $role2->givePermissionTo($permission3,$permission4,$permission5,$permission6,$permission7);
     }
 }
