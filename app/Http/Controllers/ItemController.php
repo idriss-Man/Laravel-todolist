@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Models\Item;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
@@ -31,10 +32,12 @@ class ItemController extends Controller
      */
     public function store(StoreItemRequest $request)
     {
+        Gate::authorize('create', Item::Class);
         $item = $request->validated();
         if(empty($item['user_id'])){
             $item['user_id'] = Auth::id();
         }
+
         Item::create(
             [
                 'text'=> $item['text'],
@@ -77,12 +80,13 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
+        Gate::authorize('delete', $item);
         $item->delete();
         return redirect()->route('dashboard.index');
     }
     public function check(Item $item)
     {
-
+        Gate::authorize('update', $item);
         $item->done=true;
         $item->save();
         return redirect()->route('dashboard.index');
