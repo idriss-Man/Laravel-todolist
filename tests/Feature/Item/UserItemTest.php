@@ -13,7 +13,7 @@ describe('F2 - Items', function () {
             'user_id'=> $this->user1->id,
             'text'=>"My item",
             'done'=>false,
-            'deadline'=>06/02/2030,
+            'deadline'=>"06/02/2030",
 
         ]);
 
@@ -30,29 +30,28 @@ describe('F2 - Items', function () {
         $this->actingAs($this->user1);
         $this->post(route('items.store'),[
             'text'=>"My new item",
-            'deadline'=> date("12/04/2030"),
+            'deadline'=> "12/04/2030",
         ]);
 
         $this->assertDatabaseHas('items', [
             'text'=>"My new item",
             'user_id'=>$this->user1->id,
-            'deadline'=>date("12/04/2030"),
+            'deadline'=>"12/04/2030",
         ]);
 
     });
 
     it('user can add an item to an other- A of BREAD', function () {
-        $this->actingAs($this->user1);
+        $this->actingAs($this->user2);
         $this->post(route('items.store'),[
             'text'=>"His new item",
-            'deadline'=> date("12/04/2030"),
+            'deadline'=> "12/04/2030",
             'user_id'=>$this->user2->id,
         ]);
-
         $this->assertDatabaseHas('items', [
             'text'=>"His new item",
             'user_id'=>$this->user2->id,
-            'deadline'=>date("12/04/2030"),
+            'deadline'=>"12/04/2030",
         ]);
 
     });
@@ -76,7 +75,7 @@ describe('F2 - Items', function () {
             'user_id'=> $this->user1->id,
             'text'=>"My second item",
             'done'=>true,
-            'deadline'=>date("06/05/2030"),
+            'deadline'=>"06/05/2030",
 
         ]);
 
@@ -84,7 +83,7 @@ describe('F2 - Items', function () {
 
         $this->assertDatabaseMissing('items', [
             'text'=>"My second item",
-            'deadline'=> date("12/05/2030"),
+            'deadline'=> "12/05/2030",
             'user_id'=>$this->user1->id,
         ]);
     });
